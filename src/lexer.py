@@ -15,7 +15,12 @@ t_NAT(t):
 	r'(?!-)\d+'
 	t.value = int(t.value)
 
-t_IFTHENELSE = r'if .* then .* else .*'
+t_IF = r'if '
+t_THEN = r' then '
+t_ELSE = r' else '
+t_ISZERO = r'iszero'
+t_OPEN_BRACKETS = r'('
+t_CLOSE_BRACKETS = r')'
 
 t_FUNCTION = r'\\.:.*\..*'
 
@@ -24,7 +29,12 @@ t_FUNCTION = r'\\.:.*\..*'
 tokens = (
 	'BOOL',
 	'NAT',
-	'IFTHENELSE',
+	'IF',
+	'THEN',
+	'ELSE',
+	'ISZERO',
+	'OPEN_BRACKETS',
+	'CLOSE_BRACKETS'
 	'FUNCTION',
 	)
 
