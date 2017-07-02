@@ -1,3 +1,5 @@
+import ply.lex as lex
+
 '''
 V : true | false | \x:T.M | n
 M : x | true | false | if M1 then M2 else M3 | \x:T.M | M1 M2 | 0 | succ(M) | pred(M) | iszero(M)
@@ -19,4 +21,15 @@ t_FUNCTION = r'\\.:.*\..*'
 
 #t_APPLICATION = r''
 
-#Creo que flayie cualquiera aca, pero bueno
+tokens = (
+	'BOOL',
+	'NAT',
+	'IFTHENELSE',
+	'FUNCTION',
+	)
+
+def apply_lexer(string):
+	lexer.input(string)
+	return list(lexer)
+
+lex.lex()
