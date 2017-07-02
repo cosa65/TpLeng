@@ -32,7 +32,7 @@ def p_succ(p):
     'M : SUCC OPEN_BRACKETS M CLOSE_BRACKETS'
     p[0] = p[3] + 1
 
-def p_zero(p):
+def p_ZERO(p):
     'M : ZERO'
     p[0] = 0
 
@@ -40,16 +40,28 @@ def p_term_var(p):
     'M : VAR'
     p[0] = p[1]
 
-def p_abstraction(p):
-    'M : ABSTRACTION VAR COLON M DOT M'
-    p[0] = 1
+def p_bool(p):
+    'T : TBOOL'
+    p[0] = p[1]
 
-#def p_app(p):
-#    'M : ABSTRACTION TERM_VAR COLON T DOT M'
-#    p[0] = 1
+def p_nat(p):
+    'T : TNAT'
+    p[0] = p[1]
+
+def p_function(p):
+    'T : TFunction'
+    p[0] = (p[1], p[3])
+
+def p_abstraction(p):
+    'M : LAMBDA VAR COLON T DOT M'
+    p[0] = (p[2], p[4], p[6])
+
+def p_app(p):
+    'M : M M'
+    p[0] = p[1]( p[2] )
 
 def p_error(p):
-    print("Hubo un error en el parseo.")
+    print("Vayan a fumar droga")
 
     parser.restart()
 

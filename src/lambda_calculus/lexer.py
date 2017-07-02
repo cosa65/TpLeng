@@ -31,20 +31,19 @@ def t_BOOL(t):
     t.value = True if (t.value == "true") else False
     return t
 
-def t_NAT(t):
-    r'(?!-)\d+'
-    t.value = int(t.value)
-
-t_IF = r'if '
-t_THEN = r' then '
-t_ELSE = r' else '
+t_IF = r'if\ '
+t_THEN = r'\ then\ '
+t_ELSE = r'\ else\ '
 t_ISZERO = r'iszero'
 t_PRED = r'pred '
 t_SUCC = r'succ '
-#t_OPEN_BRACKETS = r'('
-#t_CLOSE_BRACKETS = r')'
-
-t_ABSTRACTION = r'\\.:.*\..*'
+t_ZERO = r'0'
+t_OPEN_BRACKETS = r'\('
+t_CLOSE_BRACKETS = r'\)'
+t_LAMBDA = r'\\'
+t_COLON = r':'
+t_DOT = r'\.'
+t_VAR = r'[a-zA-Z]'
 
 #t_APPLICATION = r''
 
@@ -59,11 +58,12 @@ tokens = (
 	'CLOSE_BRACKETS',
 	'PRED',
 	'SUCC',
-	'ZERO',
 	'VAR',
 	'COLON',
 	'DOT',
-	'ABSTRACTION'
+	'ARROW',
+	'ZERO',
+        'LAMBDA'
 	)
 
 # Build the lexer
