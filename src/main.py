@@ -6,4 +6,5 @@ while True:
         exp_str = raw_input('calc> ')
     except EOFError:
         break
+    # Falta la parte donde se reduce la expresion
     print(parse(exp_str))

@@ -31,36 +31,43 @@ def t_BOOL(t):
     t.value = True if (t.value == "true") else False
     return t
 
+def t_error(t):
+    print "error"
+
 t_IF = r'if\ '
 t_THEN = r'\ then\ '
 t_ELSE = r'\ else\ '
 t_ISZERO = r'iszero'
 t_PRED = r'pred '
-t_SUCC = r'succ '
+t_SUCC = r'succ'
 t_ZERO = r'0'
-t_OPEN_BRACKETS = r'\('
-t_CLOSE_BRACKETS = r'\)'
+t_NAT = r'[1-9]+'
+t_TBOOL = r'Bool'
+t_TNAT = r'Nat'
 t_LAMBDA = r'\\'
-t_COLON = r':'
-t_DOT = r'\.'
-t_VAR = r'[a-zA-Z]'
+t_ARROW = r'->'
+# Asi hago que no me entre en conflicto el leer alguna variable con 
+# las palabras claves
+t_VAR = r'(?!succ|pred|if|then|else)[a-z]'
 
 #t_APPLICATION = r''
 
+literals = ['(', ')', ':', '.']
+
 tokens = (
+	'TBOOL',
+	'TNAT',
 	'BOOL',
 	'NAT',
 	'IF',
 	'THEN',
 	'ELSE',
 	'ISZERO',
-	'OPEN_BRACKETS',
-	'CLOSE_BRACKETS',
 	'PRED',
 	'SUCC',
 	'VAR',
-	'COLON',
-	'DOT',
+	#'COLON',
+	#'DOT',
 	'ARROW',
 	'ZERO',
         'LAMBDA'
