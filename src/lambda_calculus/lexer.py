@@ -35,10 +35,10 @@ def t_error(t):
     print "error"
 
 t_IF = r'if\ '
-t_THEN = r'\ then\ '
-t_ELSE = r'\ else\ '
+t_THEN = r'then'
+t_ELSE = r'else'
 t_ISZERO = r'iszero'
-t_PRED = r'pred '
+t_PRED = r'pred'
 t_SUCC = r'succ'
 t_ZERO = r'0'
 t_NAT = r'[1-9]+'
@@ -46,9 +46,10 @@ t_TBOOL = r'Bool'
 t_TNAT = r'Nat'
 t_LAMBDA = r'\\'
 t_ARROW = r'->'
+t_ignore = ' \t'
 # Asi hago que no me entre en conflicto el leer alguna variable con 
 # las palabras claves
-t_VAR = r'(?!succ|pred|if|then|else)[a-z]'
+t_VAR = r'(?!succ|pred|iszero|if|then|else)[a-z]'
 
 #t_APPLICATION = r''
 
@@ -66,8 +67,6 @@ tokens = (
 	'PRED',
 	'SUCC',
 	'VAR',
-	#'COLON',
-	#'DOT',
 	'ARROW',
 	'ZERO',
         'LAMBDA'
