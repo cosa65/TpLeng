@@ -6,8 +6,15 @@ import ply.yacc as yacc
 from .lexer import tokens
 from .parsed_objects import *
 
+precedence = [
+                ("left", "uARROW"),
+                ("left", "uLAMBDA"),
+                ("left", "uIF"),
+                ("left", "uAPP")
+        ]
+
 def p_M_if_then_else(p):
-    'M : IF M THEN M ELSE M'
+    'M : IF M THEN M ELSE M %prec uIF'
     # Check if both parts have the same type
     condition = p[2]
     expression1 = p[4]
@@ -69,11 +76,11 @@ def p_nat(p):
     p[0] = int
 
 def p_function(p):
-    'T : T ARROW T'
+    'T : T ARROW T %prec uARROW'
     p[0] = (p[1], p[3])
 
 def p_abstraction(p):
-    '''M : LAMBDA VAR ':' T '.' M'''
+    '''M : LAMBDA VAR ':' T '.' M %prec uLAMBDA '''
     # Chequear que las variables de M esten ligadas
     expression = p[6]
     variable_type = p[4]
@@ -84,7 +91,7 @@ def p_abstraction(p):
         print "Type error"
 
 def p_application(p):
-    '''M : '(' M ')' M'''
+    'M :  M M %prec uAPP'
     expression1 = p[2]
     expression2 = p[4]
     if isinstance(expression1, Abstraction):
