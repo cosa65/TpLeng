@@ -1,38 +1,98 @@
+types = {
+          int: "Nat",
+          bool: "Bool",
+        }
+
 class Expression(object):
-    def __init__(self, function, function_name, sub_expression, domain, image):
-        self._function = function
-        self._function_name = function_name
-        self._sub_expression = sub_expression
+    def __init__(self, domain, image):
         self._domain = domain
         self._image = image
+
+    def arity(self):
+        if self._domain is None:
+            return types[self._image]
+        else:
+            return types[self._domain] + "->" + types[self._image]
 
     def __str__(self):
         return self._function_name + '(' + str(self._sub_expression) + ')'
 
-class Variable(object):
-    def __init__(self, name):
-        self._name = name
+class Conditional(Expression):
+#class Conditional(object):
+    def __init__(self, condition, expression_if_true, expression_if_false):
+        super(Conditional, self).__init__(None, expression_if_true._image)
+        self._condition_expression = condition
+        self._expression_if_true = expression_if_true
+        self._expression_if_false = expression_if_false
 
     def __str__(self):
-        return str(self._name)
+        return "if " + condition + " then " + \
+                str(expression_if_true) + " else " + str(expression_if_false)
 
-class Constante(Expression):
+    def execute(self):
+        #if expression_if_true.image == e
+        if self._condition_expression.execute():
+            return self._expression_if_true.execute() 
+        else: 
+            return self._expression_if_false.execute()
+
+class ConstantExpression(Expression):
+#class ConstantExpression(object):
     def __init__(self, value):
-        identity = lambda x : x
-        super(Constante, self).__init__(identity, "cte", int(value), None, int)
+        super(ConstantExpression, self).__init__(None, int)
         self._value = int(value)
 
     def __str__(self):
         return str(self._value)
 
-class Booleano(Expression):
+    def execute(self):
+        return self
+
+class BooleanExpression(Expression):
+#class BooleanExpression(object):
     def __init__(self, boolean):
-        identity = lambda x : x
-        super(Booleano, self).__init__(identity, "cte", boolean, None, bool)
+        super(BooleanExpression, self).__init__(None, bool)
         self._value = boolean
 
     def __str__(self):
         return str(self._value)
+
+    def execute(self):
+        return self._value
+
+class ArithmeticExpression(Expression):
+#class ArithmeticExpression(object):
+    def __init__(self, sub_expression, arithmetic_function, arithmetic_function_name):
+        super(ArithmeticExpression, self).__init__(int, int)
+        self._sub_expression = sub_expression
+        self._function = arithmetic_function
+        self._function_name = arithmetic_function_name
+
+    def __str__(self):
+        if self._sub_expression._domain is None:
+            return self._function_name + "(" + str(self._sub_expression.execute()) + ")" + \
+                    ":Nat"
+        else:
+            return self._function_name + "(" + str(self._sub_expression.execute()) + ")" + \
+                    self._sub_expression._domain + ":Nat"
+
+    def execute(self):
+        sub_expression_result = self._sub_expression.execute()
+        if isinstance(sub_expression_result, ConstantExpression):
+            return ConstantExpression(self._function(sub_expression_result._value))
+        else:
+            return "Type error: \"" + self._function_name + "\" expects int type "
+
+class Variable(Expression):
+    def __init__(self, name):
+        super(Variable, self).__init__(None, None)
+        self._name = str(name)
+
+    def __str__(self):
+        return self._name
+
+    def execute(self):
+        return self._name
 
 class Application(Expression):
     def __init__(self, first, second):

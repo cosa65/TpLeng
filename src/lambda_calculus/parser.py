@@ -15,53 +15,40 @@ precedence = [
 
 def p_M_if_then_else(p):
     'M : IF M THEN M ELSE M %prec uIF'
-    # Check if both parts have the same type
     condition = p[2]
-    expression1 = p[4]
-    expression2 = p[6]
-    if isinstance(condition, Booleano) and expression1._image == expression2._image:
-        p[0] = expression1 if condition._value else expression2
-    else:
-        p[0] = "Type error"
+    expression_if_true = p[4]
+    expression_if_false = p[6]
+    p[0] = Conditional(condition, expression_if_true, expression_if_false)
 
 def p_M_bool(p):
     'M : BOOL'
-    p[0] = Booleano(p[1])
+    p[0] = BooleanExpression(p[1])
 
 def p_M_nat(p):
     'M : NAT'
-    p[0] = Constante(p[1])
+    p[0] = ConstantExpression(p[1])
 
 def p_iszero(p):
     '''M : ISZERO '(' M ')' '''
     check_zero = lambda x: x == 0
     expression = p[3]
-    if isinstance(expression, Constante):
-        p[0] = Booleano(check_zero(expression._value))
-    else:
-        p[0] = Expression(check_zero, 'iszero', expression, int, bool)
+    p[0] = BooleanExpression(check_zero, 'iszero', expression, int, bool)
 
 def p_pred(p):
     '''M : PRED '(' M ')' '''
     pred = lambda x: x - 1
     expression = p[3]
-    if isinstance(expression, Constante):
-        p[0] = Constante(pred(expression._value))
-    else:
-        p[0] = Expression(pred, 'pred', expression, int, int)
+    p[0] = ArithmeticExpression(expression, pred, 'pred')
 
 def p_succ(p):
     '''M : SUCC '(' M ')' '''
     succ = lambda x: x + 1
     expression = p[3]
-    if isinstance(expression, Constante):
-        p[0] = Constante(succ(expression._value))
-    else:
-        p[0] = Expression(succ, 'succ', expression, int, int)
+    p[0] = ArithmeticExpression(expression, succ, 'succ')
 
 def p_ZERO(p):
     'M : ZERO'
-    p[0] = Constante(0)
+    p[0] = ConstantExpression(0)
 
 def p_term_var(p):
     'M : VAR'
@@ -85,24 +72,30 @@ def p_abstraction(p):
     expression = p[6]
     variable_type = p[4]
     variable = p[2]
-    if expression._domain == variable_type:
-        p[0] = Abstraction(variable, variable_type, expression)
-    else:
-        print "Type error"
+    p[0] = Abstraction(variable, variable_type, expression)
+    #if expression._domain == variable_type:
+    #else:
+    #    print "Type error"
 
 def p_application(p):
     'M :  M M %prec uAPP'
     expression1 = p[2]
     expression2 = p[4]
-    if isinstance(expression1, Abstraction):
-        if expression1._domain == expression2._image and isinstance(expression2, Constante):
-            # Guardo el resultado de aplicar el valor de expression2
-            # A la función de expression1
-            p[0] = expression1._function(expression2._value)
-        else:
-            print "Type error"
-    else:
-        p[0] = Application(expression1, expression2)
+    p[0] = Application(expression1, expression2)
+    #if isinstance(expression1, Abstraction):
+    #    if expression1._domain == expression2._image and isinstance(expression2, Constante):
+    #        # Guardo el resultado de aplicar el valor de expression2
+    #        # A la función de expression1
+    #        p[0] = expression1._function(expression2._value)
+    #    else:
+    #        print "Type error"
+    #else:
+    #    p[0] = Application(expression1, expression2)
+
+#def p_expression(p):
+#    '''M : '(' M ')' '''
+#    expression = p[2]
+#    p[0] = Expression(expression)
 
 def p_error(p):
     print("Vayan a fumar droga")
