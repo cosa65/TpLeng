@@ -1,6 +1,7 @@
 types = {
           int: "Nat",
           bool: "Bool",
+          None: ""
         }
 
 class Expression(object):
@@ -29,13 +30,6 @@ class Conditional(Expression):
         return "if " + condition + " then " + \
                 str(expression_if_true) + " else " + str(expression_if_false)
 
-    def execute(self):
-        #if expression_if_true.image == e
-        if self._condition_expression.execute():
-            return self._expression_if_true.execute() 
-        else: 
-            return self._expression_if_false.execute()
-
 class ConstantExpression(Expression):
 #class ConstantExpression(object):
     def __init__(self, value):
@@ -43,10 +37,12 @@ class ConstantExpression(Expression):
         self._value = int(value)
 
     def __str__(self):
-        return str(self._value)
-
-    def execute(self):
-        return self
+        begin = str()
+        end = str()
+        for _ in range(self._value):
+            begin += "succ(" 
+            end += ")"
+        return begin + "0" + end 
 
 class BooleanExpression(Expression):
 #class BooleanExpression(object):
@@ -57,9 +53,6 @@ class BooleanExpression(Expression):
     def __str__(self):
         return str(self._value)
 
-    def execute(self):
-        return self._value
-
 class ArithmeticExpression(Expression):
 #class ArithmeticExpression(object):
     def __init__(self, sub_expression, arithmetic_function, arithmetic_function_name):
@@ -69,19 +62,7 @@ class ArithmeticExpression(Expression):
         self._function_name = arithmetic_function_name
 
     def __str__(self):
-        if self._sub_expression._domain is None:
-            return self._function_name + "(" + str(self._sub_expression.execute()) + ")" + \
-                    ":Nat"
-        else:
-            return self._function_name + "(" + str(self._sub_expression.execute()) + ")" + \
-                    self._sub_expression._domain + ":Nat"
-
-    def execute(self):
-        sub_expression_result = self._sub_expression.execute()
-        if isinstance(sub_expression_result, ConstantExpression):
-            return ConstantExpression(self._function(sub_expression_result._value))
-        else:
-            return "Type error: \"" + self._function_name + "\" expects int type "
+        return self._function_name + "(" + str(self._sub_expression) + ")" 
 
 class Variable(Expression):
     def __init__(self, name):
@@ -89,9 +70,6 @@ class Variable(Expression):
         self._name = str(name)
 
     def __str__(self):
-        return self._name
-
-    def execute(self):
         return self._name
 
 class Application(Expression):
@@ -104,9 +82,12 @@ class Application(Expression):
 
 class Abstraction(Expression):
     def __init__ (self, variable, variable_type, body):
-        super(Abstraction, self).__init__(body._function, body._function_name, body, variable_type, body._image)
+        if isinstance(body, Variable):
+            super(Abstraction, self).__init__(variable_type, variable_type)
+        else:
+            super(Abstraction, self).__init__(variable_type, body._image)
         self._body = body
         self._variable = variable
 
     def __str__(self):
-        return '(\\' + str(self._variable) + ':' + str(self._domain) + '.' + str(self._body) + ')'
+        return '(\\' + str(self._variable) + ':' + types[self._domain] + '.' + str(self._body) + ')'
