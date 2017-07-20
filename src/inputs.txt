@@ -1,0 +1,21 @@
+succ(0),1:Nat
+succ(x),Type Error
+pred(1),0:Nat
+pred(x),Type Error
+0,0:Nat
+if true then succ(succ(0)) else 0,2:Nat
+if false then 0 else pred(pred(3)),1:Nat
+true,True:Bool
+false,False:Bool
+if true then false else true,false:Bool
+if false then false else true,true:Bool
+if false then false else 0,Error
+\x:Nat.succ(x),\x:Nat.succ(x):Nat->Nat
+\z:Nat.z,(\z:Nat.z):Nat->Nat
+\x:Nat.succ(0),\x:Nat.succ(0):Nat->Nat
+succ(succ(succ(0))),succ(succ(succ(0))):Nat
+succ(succ(pred(0))),succ(succ(0)):Nat
+\x:Bool.if x then false else true,\x:Bool.if x then false else true:Bool->Bool
+0 0,Error
+\x:Nat->Nat.\y:Nat.\z:Bool.if z then succ(0) else 0,\x:Nat->Nat.\y:Nat.\z:Bool.if z then succ(0) else 0:(Nat->Nat)->(Nat->(Bool->Nat))
+x,Free variable

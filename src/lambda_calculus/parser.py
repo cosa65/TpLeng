@@ -64,7 +64,7 @@ def p_nat(p):
 
 def p_function(p):
     'T : T ARROW T %prec uARROW'
-    p[0] = (p[1], p[3])
+    p[0] = FunctionType(p[1], p[3])
 
 def p_abstraction(p):
     '''M : LAMBDA VAR ':' T '.' M %prec uLAMBDA '''
@@ -79,8 +79,8 @@ def p_abstraction(p):
 
 def p_application(p):
     'M :  M M %prec uAPP'
-    expression1 = p[2]
-    expression2 = p[4]
+    expression1 = p[1]
+    expression2 = p[2]
     p[0] = Application(expression1, expression2)
     #if isinstance(expression1, Abstraction):
     #    if expression1._domain == expression2._image and isinstance(expression2, Constante):

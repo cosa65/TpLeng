@@ -50,45 +50,58 @@ def reduce_expression(expression):
         else:
             return "Errot type: Expected type boolean"
 
-    elif isinstance(expression, Application): #needs to be reduced
-        tmp_expression = expression
-
-        while(True):
-            expression_str = str(tmp_expression) #objectify expression
-            reduced_expression = recursive_reduce(tmp_expression)
-            reduced_expression_str = str(reduced_expression)
-
-            if expression_str == reduced_expression_str:
-                # if fully reduced
-                return tmp_expression
+    elif isinstance(expression, Application): 
+        lambda_expression = expression._lambda_expression
+        parameter_expression = expression._parameter_expression
+        if isinstance(lambda_expression, Abstraction):
+            if lambda_expression._domain == parameter_expression._image:
+                #recursive_substituion(lambda_expression._body, parameter_expression._value)
+                reduce_expression(lambda_expression._body)
             else:
-                # continue on if theres more to do
-                tmp_expression = reduced_expression
+                return "Type parameter error"
+        else:
+            return "The aplication must be done to a lambda expression"
+        
+        #tmp_expression = expression
 
-#def recursive_substitution(old, substituter, new):
-## Variable
-## check if substituter matches var
-#if isinstance(old, Variable):
-#if old._name == substituter._name:
-#return new
-#
-## Application
-## since Application : Term Term, recurse on both 
-## terms to eventually get to Variable case above
-#elif isinstance(old, Application):
-#old._first = recursive_substitution(old._first, substituter, new)
-#old._second = recursive_substitution(old._second, substituter, new)
-#
-## Abstraction
-## if the variable in the abstraction matches the substituter,
-## want to get to Variable case above
-## else, recurse on body for same reason
-#elif isinstance(old, Abstraction):
-#if old._variable == substituter:
-#old._variable = recursive_substitution(old._variable, substituter, new)
-#old._body = recursive_substitution(old._body, substituter, new)
-#
-#return old
+        #while(True):
+        #    expression_str = str(tmp_expression) #objectify expression
+        #    reduced_expression = recursive_reduce(tmp_expression)
+        #    reduced_expression_str = str(reduced_expression)
+
+        #    if expression_str == reduced_expression_str:
+        #        # if fully reduced
+        #        return tmp_expression
+        #    else:
+        #        # continue on if theres more to do
+        #        tmp_expression = reduced_expression
+
+"""
+def recursive_substitution(old, substituter, new):
+    # Variable
+    # check if substituter matches var
+    if isinstance(old, Variable):
+        if old._name == substituter._name:
+            return new
+
+    # Application
+    # since Application : Term Term, recurse on both 
+    # terms to eventually get to Variable case above
+    elif isinstance(old, Application):
+        old._first = recursive_substitution(old._first, substituter, new)
+        old._second = recursive_substitution(old._second, substituter, new)
+
+    # Abstraction
+    # if the variable in the abstraction matches the substituter,
+    # want to get to Variable case above
+    # else, recurse on body for same reason
+    elif isinstance(old, Abstraction):
+        if old._variable == substituter:
+            old._variable = recursive_substitution(old._variable, substituter, new)
+            old._body = recursive_substitution(old._body, substituter, new)
+
+return old
+"""
 #
 #
 #def beta_reduce(term):
